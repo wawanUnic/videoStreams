@@ -6,7 +6,7 @@ MJPEG-мультипоток с OpenCV и uStreamer
 1. физической камеры (/dev/video0)
 2. двух виртуальных устройств (v4l2loopback)
 3. OpenCV-обработки
-4. трансляции через ustreamer с низкой частотой кадров (например, 1 FPS)
+4. трансляции через ustreamer с низкой частотой кадров (1 FPS)
 
 Установка зависимостей
 ```
@@ -22,7 +22,7 @@ cd ustreamer
 make
 sudo make install
 ```
-Если включён Secure Boot — отключите его или зарегистрируйте модуль через MOK.
+Если включён Secure Boot UEFI — отключите его или зарегистрируйте модуль через MOK.
 
 Настройка виртуальных устройств
 Создаём два v4l2loopback-устройства:
@@ -38,15 +38,13 @@ v4l2-ctl --list-devices
 Поток с камеры в виртуальные устройства
 Копируем MJPEG с физической камеры в /dev/video10:
 ```
-ffmpeg -f v4l2 -input_format mjpeg -i /dev/video0 \
-       -f v4l2 -vcodec copy /dev/video10
+ffmpeg -f v4l2 -input_format mjpeg -i /dev/video0 -f v4l2 -vcodec copy /dev/video10
 ```
 
 Копируем с понижением FPS в /dev/video11:
 
 ```
-ffmpeg -f v4l2 -input_format mjpeg -framerate 1 -i /dev/video10 \
-       -f v4l2 -vcodec copy /dev/video11
+ffmpeg -f v4l2 -input_format mjpeg -framerate 1 -i /dev/video10 -f v4l2 -vcodec copy /dev/video11
 ```
 
 Проверка мультичтения через OpenCV
@@ -69,7 +67,6 @@ print("Кадр получен:", ret)
 ```
 # Поток 1: необработанный
 ustreamer --device=/dev/video10 --format=mjpeg --host=0.0.0.0 --port=2000 --desired-fps=1
-
 # Поток 2: обработанный
 ustreamer --device=/dev/video11 --format=mjpeg --host=0.0.0.0 --port=2001 --desired-fps=1
 ```
