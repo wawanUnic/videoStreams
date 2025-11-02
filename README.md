@@ -75,7 +75,7 @@ ustreamer --device=/dev/video11 --format=mjpeg --host=0.0.0.0 --port=2001 --desi
 ```
 
 Архитектура
-
+```
 [ /dev/video0 ] ← физическая камера (MJPEG)
       │
       ▼
@@ -89,6 +89,7 @@ ustreamer --device=/dev/video11 --format=mjpeg --host=0.0.0.0 --port=2001 --desi
       ▼
 [ /dev/video11 ] ← виртуальное устройство
      └── ustreamer2 транслирует в браузер2 (1 FPS)
+```
 
 Примечания:
 1. exclusive_caps=1 позволяет каждому клиенту получать собственный формат
